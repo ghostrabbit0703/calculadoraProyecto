@@ -57,13 +57,13 @@ document.addEventListener('DOMContentLoaded',function(){
         if (numeroActual === '' && numeroAnterior === '') return;
             
         if (numeroActual === '' && numeroAnterior !== '') {
-                // Cambiar el operador actual
+               
                 operacion = operador;
                 return;
             }
         
         if (numeroAnterior !== '' && !reiniciarPantalla) {
-            // Si ya hay un número anterior y operación, calcular
+           
             const resultado = calcular();
             if (resultado !== null) {
                 numeroActual = resultado.toString();
