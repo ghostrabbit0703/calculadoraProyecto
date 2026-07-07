@@ -100,6 +100,7 @@ document.addEventListener('DOMContentLoaded',function(){
         
       
         result = Math.round(result * 1000000) / 1000000;
+        addToHistory(previousNumber, operation, currentNumber, result);
         return result;
     }
 
@@ -122,7 +123,7 @@ document.addEventListener('DOMContentLoaded',function(){
         }
     }
 
-    calculatorButtons.forEach(button => {
+    /* calculatorButtons.forEach(button => {
         button.addEventListener('click', function() {
             const value = this.getAttribute('data-value');
             console.log('Botón presionado:', value);
@@ -155,6 +156,81 @@ document.addEventListener('DOMContentLoaded',function(){
                 
             }
         });
+    }); */
+    calculatorButtons.forEach(button => {
+    button.addEventListener('click', function() {
+        const value = this.getAttribute('data-value');
+        console.log('Botón presionado:', value);
+
+        switch (true) {
+            case this.classList.contains('number'):
+                addDigit(value);
+                break;
+
+            case this.classList.contains('operator'):
+                switch (value) {
+                    case '=':
+                        handleEquals();
+                        break;
+
+                    case '.':
+                        addDigit(value);
+                        break;
+
+                    case '+-':
+                        if (currentNumber !== '') {
+                            if (currentNumber.startsWith('-')) {
+                                currentNumber = currentNumber.substring(1);
+                            } else {
+                                currentNumber = '-' + currentNumber;
+                            }
+
+                            updateDisplay(currentNumber);
+                        }
+                        break;
+
+                    default:
+                        handleOperator(value);
+                        break;
+                }
+                break;
+
+            case this.classList.contains('clear-button'):
+                clearAll();
+                break;
+            }
+        });
     });
+
+    //logica para agraegar al historial
+    /* function addToHistory(firstNumber, operation, secondNumber, result) {
+        const displayHistory = document.querySelector(".history");
+        const newRow = document.createElement("li");
+        displayHistory.textContent = `${firstNumber} ${operation} ${secondNumber} = ${result}`;
+        displayHistory.appendChild(newRow);
+    } */
+  let countOperation = 1;
+
+function addToHistory(firstNumber, operation, secondNumber, result) {
+    const displayHistory = document.querySelector(".history");
+
+    const newRow = document.createElement("li");
+    const titleHistory = document.createElement("h5");
+    const operationText = document.createElement("p");
+
+    titleHistory.textContent = `Operación #${countOperation}`;
+    operationText.textContent = `${firstNumber} ${operation} ${secondNumber} = ${result}`;
+
+    newRow.classList.add("history-item");
+    titleHistory.classList.add("history-title");
+    operationText.classList.add("history-operation");
+
+    newRow.appendChild(titleHistory);
+    newRow.appendChild(operationText);
+
+    displayHistory.prepend(newRow);
+
+    countOperation++;
+}
 } )
 
