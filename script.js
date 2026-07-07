@@ -1,165 +1,157 @@
 document.addEventListener('DOMContentLoaded',function(){
 
     
-    const pantallaCalculadora= document.getElementById("pantalla-calculadora");
-    const botonesCalculadora= document.querySelectorAll(".botones-calculadora button")
+    const calculatorDisplay = document.getElementById("calculator-display");
+    const calculatorButtons = document.querySelectorAll(".calculator-buttons button")
     
-    let numeroActual = '';
-    let numeroAnterior = '';
-    let operacion = null;
-    let reiniciarPantalla = false;
+    let currentNumber = '';
+    let previousNumber = '';
+    let operation = null;
+    let shouldResetDisplay = false;
 
    
-    function actualizarPantalla(valor) {
-        pantallaCalculadora.textContent = valor || '0';
+    function updateDisplay(value) {
+        calculatorDisplay.textContent = value || '0';
     }
     
     
-    function agregarDigito(digito) {
-        if (reiniciarPantalla) {
-            numeroActual = '';
-            reiniciarPantalla = false;
+    function addDigit(digit) {
+        if (shouldResetDisplay) {
+            currentNumber = '';
+            shouldResetDisplay = false;
         }
         
-        /* if (digito === '-') {
-            if (numeroActual === '') {
-                numeroActual = '-';
-                actualizarPantalla(numeroActual);
-            }
-
-            return;
-        } */
-        if (numeroActual.length >= 10) return;
+        if (currentNumber.length >= 10) return;
        
-        if (digito === '0' && numeroActual === '0') return;
+        if (digit === '0' && currentNumber === '0') return;
         
-        if (digito === '.' && numeroActual === '') {
-            numeroActual = '0.';
+        if (digit === '.' && currentNumber === '') {
+            currentNumber = '0.';
         } 
      
         else {
-            numeroActual += digito;
+            currentNumber += digit;
         }
         
-        actualizarPantalla(numeroActual);
+        updateDisplay(currentNumber);
     }
 
-    function limpiarTodo(){
-        numeroActual='';
-        numeroAnterior = '';
-        operacion = null;
-        reiniciarPantalla = false;
-        actualizarPantalla('0');
+    function clearAll(){
+        currentNumber='';
+        previousNumber = '';
+        operation = null;
+        shouldResetDisplay = false;
+        updateDisplay('0');
 
     }
 
-    function manejarOperador(operador) {
-        if (numeroActual === '' && numeroAnterior === '') return;
+    function handleOperator(operator) {
+        if (currentNumber === '' && previousNumber === '') return;
             
-        if (numeroActual === '' && numeroAnterior !== '') {
+        if (currentNumber === '' && previousNumber !== '') {
                
-                operacion = operador;
+                operation = operator;
                 return;
             }
         
-        if (numeroAnterior !== '' && !reiniciarPantalla) {
+        if (previousNumber !== '' && !shouldResetDisplay) {
            
-            const resultado = calcular();
-            if (resultado !== null) {
-                numeroActual = resultado.toString();
-                actualizarPantalla(numeroActual);
+            const result = calculate();
+            if (result !== null) {
+                currentNumber = result.toString();
+                updateDisplay(currentNumber);
             }
         }
         
-        numeroAnterior = numeroActual;
-        operacion = operador;
-        reiniciarPantalla = true;
+        previousNumber = currentNumber;
+        operation = operator;
+        shouldResetDisplay = true;
     }
    
-    function calcular() {
-        const num1 = parseFloat(numeroAnterior);
-        const num2 = parseFloat(numeroActual);
+    function calculate() {
+        const firstNumber = parseFloat(previousNumber);
+        const secondNumber = parseFloat(currentNumber);
         
-        if (isNaN(num1) || isNaN(num2)) return null;
+        if (isNaN(firstNumber) || isNaN(secondNumber)) return null;
         
-        let resultado;
-        switch(operacion) {
+        let result;
+        switch(operation) {
             case '+':
-                resultado = num1 + num2;
+                result = firstNumber + secondNumber;
                 break;
             case '-':
-                resultado = num1 - num2;
+                result = firstNumber - secondNumber;
                 break;
             case 'X':
-                resultado = num1 * num2;
+                result = firstNumber * secondNumber;
                 break;
             case '/':
-                if (num2 === 0) {
+                if (secondNumber === 0) {
                     return 'Error';
                 }
-                resultado = num1 / num2;
+                result = firstNumber / secondNumber;
                 break;
             case '%':
-                resultado = num1 * (num2 / 100);
+                result = firstNumber * (secondNumber / 100);
                 break;
             default:
                 return null;
         }
         
       
-        resultado = Math.round(resultado * 1000000) / 1000000;
-        return resultado;
+        result = Math.round(result * 1000000) / 1000000;
+        return result;
     }
 
-    function manejarIgual() {
-        if (numeroAnterior === '' || numeroActual === '') return;
+    function handleEquals() {
+        if (previousNumber === '' || currentNumber === '') return;
         
-        const resultado = calcular();
-        if (resultado !== null && resultado !== 'Error') {
-            numeroActual = resultado.toString();
-            numeroAnterior = '';
-            operacion = null;
-            actualizarPantalla(numeroActual);
-            reiniciarPantalla = true;
-        } else if (resultado === 'Error') {
-            pantallaCalculadora.textContent = 'Error';
-            reiniciarPantalla = true;
-            numeroActual = '';
-            numeroAnterior = '';
-            operacion = null;
+        const result = calculate();
+        if (result !== null && result !== 'Error') {
+            currentNumber = result.toString();
+            previousNumber = '';
+            operation = null;
+            updateDisplay(currentNumber);
+            shouldResetDisplay = true;
+        } else if (result === 'Error') {
+            calculatorDisplay.textContent = 'Error';
+            shouldResetDisplay = true;
+            currentNumber = '';
+            previousNumber = '';
+            operation = null;
         }
     }
 
-    botonesCalculadora.forEach(boton => {
-        boton.addEventListener('click', function() {
-            const valor = this.getAttribute('data-valor');
-            console.log('Botón presionado:', valor);
+    calculatorButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const value = this.getAttribute('data-value');
+            console.log('Botón presionado:', value);
 
-            if (this.classList.contains('numero')) {
-                 agregarDigito(valor);
+            if (this.classList.contains('number')) {
+                 addDigit(value);
                 
-            } else if (this.classList.contains('operador')) {
-                 if (valor === '=') {
-                    manejarIgual();
-                } else if (valor === '.') {
-                    agregarDigito(valor);
-                } else if (valor === '+-') {
+            } else if (this.classList.contains('operator')) {
+                 if (value === '=') {
+                    handleEquals();
+                } else if (value === '.') {
+                    addDigit(value);
+                } else if (value === '+-') {
                    
-                    if (numeroActual !== '') {
-                        if (numeroActual.startsWith('-')) {
-                            numeroActual = numeroActual.substring(1);
+                    if (currentNumber !== '') {
+                        if (currentNumber.startsWith('-')) {
+                            currentNumber = currentNumber.substring(1);
                         } else {
-                            numeroActual = '-' + numeroActual;
+                            currentNumber = '-' + currentNumber;
                         }
-                        actualizarPantalla(numeroActual);
+                        updateDisplay(currentNumber);
                     }
                 } else {
-                    manejarOperador(valor);
+                    handleOperator(value);
                 }
                 
-            } else if (this.classList.contains('limpiador')) {
+            } else if (this.classList.contains('clear-button')) {
                 
-                limpiarTodo();
+                clearAll();
                 
             }
         });

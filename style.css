@@ -17,20 +17,20 @@ body{
     flex-direction: column;
     align-items: center;
 }
-.marco-calculadora{
+.calculator-frame{
     background-color: #77777759;
     padding: 20px;
     border-radius: 5px;
     margin: 10px;
     box-shadow: 10px 5px 5px rgba(0, 0, 0, 0.3);
 }
-.marca-calculadora{
+.calculator-brand{
     font-size: 2rem;
     color:red;
     font-weight: 1000;
 }
 
-.pantalla-calculadora{
+.calculator-display{
     background-color: #2d2d2d;
     color: white;
     font-size: 3rem;
@@ -45,7 +45,7 @@ body{
     font-weight: 300;
 }
 
-.botones-calculadora{
+.calculator-buttons{
     display:grid;
     grid-template-columns: repeat(4,1fr);
     gap:5px;
@@ -53,7 +53,7 @@ body{
 
 }
 
-.botones-calculadora button{
+.calculator-buttons button{
     margin: 4px;
     padding: 15px;
     border-radius:10px;
@@ -63,40 +63,40 @@ body{
     border: 2px solid white;
 }
 
-.botones-calculadora button:active {
+.calculator-buttons button:active {
   transform: scale(0.95);
 }
 
-.numero{
+.number{
     background-color: rgb(20, 33, 84);
     color:white;
     font-size: 1em;
 }
 
-.numero:hover{
+.number:hover{
     background-color: rgba(79, 92, 241, 0.681);
     /* font-size: 1.5rem; */
 }
 
-.operador{
+.operator{
     background-color: rgb(222, 138, 20);
     color:white;
     font-size: 1em;
 }
 
-.operador:hover{
+.operator:hover{
     background-color: rgb(245, 200, 0);
 }
-.limpiador{
+.clear-button{
     background-color: rgba(255, 0, 0, 0.896);
     color: white;
 }
 
-.limpiador:hover{
+.clear-button:hover{
     background-color: rgb(255, 134, 21);
 }
 
-.operador[data-valor="="]{
+.operator[data-value="="]{
     grid-column: 3 / span 2;
 }
 
