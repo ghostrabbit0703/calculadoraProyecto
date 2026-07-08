@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded',function(){
 
-    
+   
     const calculatorDisplay = document.getElementById("calculator-display");
     const calculatorButtons = document.querySelectorAll(".calculator-buttons button")
     
@@ -171,30 +171,58 @@ document.addEventListener('DOMContentLoaded',function(){
         });
     });
 
-    //logica para agraegar al historial
+    //logica para agraegar al historial con Local storage
+ 
+    let countOperation = 1;
+    let historyData = JSON.parse(localStorage.getItem("calculatorHistory")) || [];
 
-  let countOperation = 1;
+    function addToHistory(firstNumber, operation, secondNumber, result) {
+        const operationObject = {
+            number: countOperation,
+            firstNumber: firstNumber,
+            operation: operation,
+            secondNumber: secondNumber,
+            result: result
+        };
 
-function addToHistory(firstNumber, operation, secondNumber, result) {
-    const displayHistory = document.querySelector(".history");
+        historyData.push(operationObject);
 
-    const newRow = document.createElement("li");
-    const titleHistory = document.createElement("h5");
-    const operationText = document.createElement("p");
+        localStorage.setItem("calculatorHistory", JSON.stringify(historyData));
 
-    titleHistory.textContent = `Operación #${countOperation}`;
-    operationText.textContent = `${firstNumber} ${operation} ${secondNumber} = ${result}`;
+        renderHistory();
 
-    newRow.classList.add("history-item");
-    titleHistory.classList.add("history-title");
-    operationText.classList.add("history-operation");
+        countOperation++;
+    }
 
-    newRow.appendChild(titleHistory);
-    newRow.appendChild(operationText);
+    function renderHistory() {
+        const displayHistory = document.querySelector(".history");
 
-    displayHistory.prepend(newRow);
+        displayHistory.innerHTML = "";
 
-    countOperation++;
-}
+        historyData.forEach(item => {
+            const newRow = document.createElement("li");
+            const titleHistory = document.createElement("h5");
+            const operationText = document.createElement("p");
+
+            titleHistory.textContent = `Operación #${item.number}`;
+            operationText.textContent = `${item.firstNumber} ${item.operation} ${item.secondNumber} = ${item.result}`;
+
+            newRow.classList.add("history-item");
+            titleHistory.classList.add("history-title");
+            operationText.classList.add("history-operation");
+
+            newRow.appendChild(titleHistory);
+            newRow.appendChild(operationText);
+
+            displayHistory.prepend(newRow);
+        });
+    }
+    renderHistory();
+
+        if (historyData.length > 0) {
+            countOperation = historyData[historyData.length - 1].number + 1;
+        }
+        
+
 } )
 
