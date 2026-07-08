@@ -87,7 +87,10 @@ document.addEventListener('DOMContentLoaded',function(){
                 break;
             case '/':
                 if (secondNumber === 0) {
-                    return 'Error';
+                result = 'Error';
+                addToHistory(previousNumber, operation, currentNumber, result);
+                return result;
+                    //return 'Error';
                 }
                 result = firstNumber / secondNumber;
                 break;
@@ -123,40 +126,6 @@ document.addEventListener('DOMContentLoaded',function(){
         }
     }
 
-    /* calculatorButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const value = this.getAttribute('data-value');
-            console.log('Botón presionado:', value);
-
-            if (this.classList.contains('number')) {
-                 addDigit(value);
-                
-            } else if (this.classList.contains('operator')) {
-                 if (value === '=') {
-                    handleEquals();
-                } else if (value === '.') {
-                    addDigit(value);
-                } else if (value === '+-') {
-                   
-                    if (currentNumber !== '') {
-                        if (currentNumber.startsWith('-')) {
-                            currentNumber = currentNumber.substring(1);
-                        } else {
-                            currentNumber = '-' + currentNumber;
-                        }
-                        updateDisplay(currentNumber);
-                    }
-                } else {
-                    handleOperator(value);
-                }
-                
-            } else if (this.classList.contains('clear-button')) {
-                
-                clearAll();
-                
-            }
-        });
-    }); */
     calculatorButtons.forEach(button => {
     button.addEventListener('click', function() {
         const value = this.getAttribute('data-value');
@@ -203,12 +172,7 @@ document.addEventListener('DOMContentLoaded',function(){
     });
 
     //logica para agraegar al historial
-    /* function addToHistory(firstNumber, operation, secondNumber, result) {
-        const displayHistory = document.querySelector(".history");
-        const newRow = document.createElement("li");
-        displayHistory.textContent = `${firstNumber} ${operation} ${secondNumber} = ${result}`;
-        displayHistory.appendChild(newRow);
-    } */
+
   let countOperation = 1;
 
 function addToHistory(firstNumber, operation, secondNumber, result) {
