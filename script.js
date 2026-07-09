@@ -176,36 +176,33 @@ document.addEventListener('DOMContentLoaded',function(){
     let countOperation = 1;
     let historyData = JSON.parse(localStorage.getItem("calculatorHistory")) || [];
 
+ 
     function addToHistory(firstNumber, operation, secondNumber, result) {
-        const operationObject = {
-            number: countOperation,
-            firstNumber: firstNumber,
-            operation: operation,
-            secondNumber: secondNumber,
-            result: result
-        };
+        const operationSymbol = operation === "X" ? "*" : operation;
 
-        historyData.push(operationObject);
+        const operationText = `${firstNumber} ${operationSymbol} ${secondNumber} = ${result}`;
+
+        historyData.push(operationText);
 
         localStorage.setItem("calculatorHistory", JSON.stringify(historyData));
 
         renderHistory();
 
         countOperation++;
-    }
+    } 
 
     function renderHistory() {
         const displayHistory = document.querySelector(".history");
 
         displayHistory.innerHTML = "";
 
-        historyData.forEach(item => {
+        historyData.forEach((item, index) => {
             const newRow = document.createElement("li");
             const titleHistory = document.createElement("h5");
             const operationText = document.createElement("p");
 
-            titleHistory.textContent = `Operación #${item.number}`;
-            operationText.textContent = `${item.firstNumber} ${item.operation} ${item.secondNumber} = ${item.result}`;
+            titleHistory.textContent = `Operación #${index + 1}`;
+            operationText.textContent = item;
 
             newRow.classList.add("history-item");
             titleHistory.classList.add("history-title");
@@ -217,11 +214,11 @@ document.addEventListener('DOMContentLoaded',function(){
             displayHistory.prepend(newRow);
         });
     }
-    renderHistory();
+        renderHistory();
 
         if (historyData.length > 0) {
             countOperation = historyData[historyData.length - 1].number + 1;
-        }
+        };
         
 
 } )
