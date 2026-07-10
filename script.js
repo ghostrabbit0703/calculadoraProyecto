@@ -220,6 +220,14 @@ document.addEventListener('DOMContentLoaded',function(){
             countOperation = historyData[historyData.length - 1].number + 1;
         };
         
+    const cleanHistory = document.querySelector(".clean-history");
+
+    cleanHistory.addEventListener('click',()=>{
+        localStorage.removeItem("calculatorHistory")
+        historyData = [];
+        countOperation=0;
+        renderHistory();
+    })
 
 } )
 
